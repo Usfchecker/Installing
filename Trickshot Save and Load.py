@@ -56,6 +56,7 @@ def toggle_functionality():
             enabled = not enabled
             status = "enabled" if enabled else "disabled"
             os.system('cls' if os.name == 'nt' else 'clear')
+            print(f"=-------------------------------------= CORNS POS SAVER =-------------------------------------=")
             print(f"Left/Right D-Pad Bind {status}")
 
 if __name__ == "__main__":
