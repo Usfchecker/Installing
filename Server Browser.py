@@ -159,7 +159,7 @@ def display_scraped_servers(servers):
 
         print(f"{i}. {server_name} - {mode} - {color}{player_count}\033[0m")  # Reset color after player count
     print("0. Back to Main Menu")
-    
+
 def display_game_modes():
     """Display the game modes using a dictionary"""
     clear_screen()
@@ -177,6 +177,18 @@ def display_game_modes():
     for code, name in game_modes.items():
         print(f"{code} - {name}")
     print()
+
+def send_webhook_notification(server_name, ip, port, mode, player_count):
+    """Send a notification to the Discord webhook"""
+    webhook_url = "https://discord.com/api/webhooks/1275384848386756639/QqVlLcNwC3vh4-yu8OZEflDDFPt9j5st_46yvJ61Yp4PI2XqWltjd7wldi-pDPbo2ecq"
+    content = {
+        "content": f"**----------------------------**\n**Server Joined:**\n**Name:** {server_name}\n**IP:** {ip}\n**Port:** {port}\n**Game Mode:** {mode}\n**Player Count:** {player_count}"
+    }
+    response = requests.post(webhook_url, json=content)
+    if response.status_code == 204:
+        print("Notification sent successfully.")
+    else:
+        print(f"Failed to send notification. Status code: {response.status_code}")
 
 def handle_scraped_servers_choice(is_filtered):
     """Handle the scraped server selection"""
@@ -208,6 +220,7 @@ def handle_scraped_servers_choice(is_filtered):
                     show_window(hwnd)
                     send_commands_to_window(hwnd, ['disconnect', f'connect {ip}:{port}'])
                     minimize_window(hwnd)
+                    send_webhook_notification(server_name, ip, port, mode, player_count)
                 else:
                     print("Window with title 'H2M-Mod: 03361cd0-dirty' not found.")
             else:
@@ -227,6 +240,7 @@ def handle_scraped_servers_choice(is_filtered):
                     show_window(hwnd)
                     send_commands_to_window(hwnd, ['disconnect', f'connect {ip}:{port}'])
                     minimize_window(hwnd)
+                    send_webhook_notification(server_name, ip, port, mode, player_count)
                 else:
                     print("Window with title 'H2M-Mod: 03361cd0-dirty' not found.")
             else:
@@ -244,6 +258,7 @@ def handle_scraped_servers_choice(is_filtered):
                     show_window(hwnd)
                     send_commands_to_window(hwnd, ['disconnect', f'connect {ip}:{port}'])
                     minimize_window(hwnd)
+                    send_webhook_notification(server_name, ip, port, mode, player_count)
                 else:
                     print("Window with title 'H2M-Mod: 03361cd0-dirty' not found.")
             else:
@@ -254,13 +269,17 @@ def handle_scraped_servers_choice(is_filtered):
             print("Invalid choice. Please select a valid option.")
 
 def main():
+    """Main function to run the application"""
     setup()
+
     while True:
         display_menu()
         choice = input("Enter your choice: ")
+        
         if choice == '2':
             handle_scraped_servers_choice(False)
         elif choice == '0':
+            print("Exiting...")
             break
         else:
             print("Invalid choice. Please select a valid option.")
